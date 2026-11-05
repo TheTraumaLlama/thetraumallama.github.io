@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>D-CHART | EMS Report Builder</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#10141c;--panel:#191f2b;--panel2:#202838;--field:#111824;--text:#edf2f8;
+  --muted:#9ba9ba;--line:#303c4e;--accent:#5597f5;--accent-rgb:85,151,245;
+  --warn:#e6b65c;--radius:18px;--shadow:0 12px 35px rgba(0,0,0,.22);
+}
+:root[data-theme="light"]{
+  color-scheme:light;--bg:#f2f5f9;--panel:#fff;--panel2:#f3f6fa;--field:#fff;
+  --text:#17202d;--muted:#667487;--line:#d9e0e9;--shadow:0 10px 28px rgba(25,42,65,.08);
+}
+/* True High-Contrast Black & Greyscale Palette */
+:root[data-accent="contrast"]{
+  color-scheme:dark!important;
+  --bg:#000000!important;
+  --panel:#0a0a0a!important;
+  --panel2:#121212!important;
+  --field:#050505!important;
+  --text:#ffffff!important;
+  --muted:#d0d0d0!important;
+  --line:#888888!important;
+  --accent:#ffffff!important;
+  --accent-rgb:255,255,255!important;
+  --warn:#ffffff!important;
+  --shadow:none!important;
+}
+:root[data-accent="contrast"] .mark{background:#fff!important;color:#000!important}
+:root[data-accent="contrast"] button.primary{background:#fff!important;border-color:#fff!important;color:#000!important;font-weight:bold!important}
+:root[data-accent="contrast"] button{border-color:#888!important}
+:root[data-accent="contrast"] button:hover{background:#333!important;color:#fff!important}
+:root[data-accent="contrast"] .unit-control button.active{background:#fff!important;color:#000!important;font-weight:bold!important}
+:root[data-accent="contrast"] .choice input{accent-color:#ffffff}
+:root[data-accent="contrast"] input, 
+:root[data-accent="contrast"] select, 
+:root[data-accent="contrast"] textarea{border-color:#888!important;color:#fff!important;background:#050505!important}
+:root[data-accent="contrast"] input:focus, 
+:root[data-accent="contrast"] select:focus, 
+:root[data-accent="contrast"] textarea:focus{border-color:#fff!important;outline:2px solid #fff!important}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.topbar{max-width:1600px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:40px;height:40px;border-radius:14px;background:var(--accent);display:grid;place-items:center;color:white;font-weight:850;letter-spacing:-1px}
+.brand h1{font-size:17px;margin:0;letter-spacing:.02em}.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:9px 13px;font-weight:650}
+button:hover{border-color:var(--accent)}button.primary{background:var(--accent);border-color:var(--accent);color:white}
+button.danger{color:#ff9b9b}
+main{max-width:1600px;margin:0 auto;padding:22px;display:grid;grid-template-columns:minmax(380px,1.05fr) minmax(360px,.95fr);gap:20px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.panel-head h2{font-size:16px;margin:0}.panel-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.form-body{padding:18px;display:grid;gap:16px}
+.section{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.section-title{padding:12px 15px;background:var(--panel2);font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.section-content{padding:15px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{min-width:0;display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label,.field-label{font-size:12px;color:var(--muted);font-weight:700}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;background:var(--field);color:var(--text);padding:10px 11px;outline:none;min-width:0}
+textarea{min-height:78px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.13)}
+.missing input,.missing textarea,.missing select{border-color:var(--accent);box-shadow:0 0 0 1px rgba(230,182,92,.22)}
+.missing label:after{content:" · optional";font-weight:500;color:var(--warn)}
+.hint{font-size:11px;color:var(--muted)}
+.inline{display:flex;gap:8px;align-items:center}.inline>*{flex:1}
+.choice{display:flex;gap:8px;flex-wrap:wrap}.choice label{display:flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:var(--field);color:var(--text);cursor:pointer;font-size:12px}.choice input{width:auto;accent-color:var(--accent)}
+.unit-control{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--field);gap:0}
+.unit-control input{border:0;border-radius:0;box-shadow:none!important;min-width:0;flex:1}
+.unit-control button{border:0;border-left:1px solid var(--line);border-radius:0;padding:0 10px;background:transparent;color:var(--muted);min-width:36px}
+.unit-control button.active{background:var(--accent);color:#fff}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.pill{display:flex;align-items:center;gap:7px;background:rgba(var(--accent-rgb),.15);border:1px solid rgba(var(--accent-rgb),.35);border-radius:999px;padding:4px 8px;font-size:12px}
+.pill button{padding:0;border:0;background:none;color:var(--text);font-size:15px;line-height:1}
+.repeat-card{border:1px solid var(--line);border-radius:13px;padding:12px;display:grid;gap:10px;margin-top:8px}
+.repeat-head{display:flex;justify-content:space-between;align-items:center;font-weight:750;font-size:13px}
+.vitals-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.vitals-grid .field input{padding:9px}
+.report-wrap{position:sticky;top:86px}
+.report-actions{display:flex;gap:7px;flex-wrap:wrap}
+.report-area{padding:20px}
+#report{width:100%;min-height:560px;line-height:1.72;font:15px/1.75 Georgia,serif;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:18px;white-space:pre-wrap}
+.report-note{font-size:11px;color:var(--muted);margin:10px 2px 0}
+.settings{display:flex;gap:8px;align-items:center}
+.settings select{width:auto;padding:8px 10px}
+.hidden{display:none!important}
+footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);font-size:11px}
+.mobile-report-toggle{display:none}
+@media(max-width:950px){
+ main{grid-template-columns:1fr;padding:14px}
+ .report-wrap{position:static;grid-row:1}
+ .report-area{padding:13px}
+ #report{min-height:260px}
+ .mobile-report-toggle{display:inline-flex}
+ .report-wrap.collapsed #report,.report-wrap.collapsed .report-note{display:none}
+ .report-wrap.collapsed .report-area{padding:0 13px 13px}
+}
+@media(max-width:600px){
+ .topbar{padding:11px 13px;align-items:flex-start}.brand h1{font-size:15px}
+ .toolbar{justify-content:flex-end}.toolbar button{padding:8px 9px;font-size:12px}
+ main{padding:10px;gap:12px}.form-body{padding:11px}.section-content{padding:11px;grid-template-columns:1fr}
+ .field.full{grid-column:auto}.vitals-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .panel-head{padding:13px}.settings{width:100%;justify-content:flex-end}
+}
+@media(prefers-reduced-motion:no-preference){button,.panel{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<header><div class="topbar">
+  <div class="brand"><div class="mark">D</div><div><h1>D-CHART Report Builder</h1><small>EMS patient care narrative</small></div></div>
+  <div class="toolbar">
+    <div class="settings">
+      <select id="theme" aria-label="Theme"><option value="dark">Dark</option><option value="light">Light</option></select>
+      <select id="accent" aria-label="Accent color"><option value="blue">Blue</option><option value="red">Red</option><option value="yellow">Yellow</option><option value="green">Green</option><option value="purple">Purple</option><option value="orange">Orange</option><option value="gray">Grayscale</option><option value="contrast">High contrast</option></select>
+    </div>
+    <button id="clearBtn" class="danger">New report</button>
+  </div>
+</div></header>
+<main>
+<section class="panel form-panel">
+ <div class="panel-head"><div><h2>Patient & incident information</h2><p>Fields marked in amber are blank; all fields remain optional.</p></div><span class="hint">Draft stays in this tab</span></div>
+ <div class="form-body" id="form" autocomplete="off">
+  <section class="section"><div class="section-title">D · Dispatch</div><div class="section-content">
+   <div class="field"><label for="unit">Unit designation</label><input id="unit" data-pref="unit" placeholder="e.g. Medic 1"></div>
+   <div class="field"><label for="sceneLocation">Scene location</label><input id="sceneLocation" list="sceneLocations" placeholder="Enter or choose"><datalist id="sceneLocations"><option>Residence</option><option>Private residence</option><option>Roadway</option><option>Business</option><option>Healthcare facility</option><option>Public place</option><option>School</option><option>Workplace</option></datalist></div>
+   <div class="field full"><label for="sceneType">Scene type</label><input id="sceneType" list="sceneTypes" placeholder="Enter or choose"><datalist id="sceneTypes"><option>Medical</option><option>Trauma</option><option>Motor vehicle collision</option><option>Fall</option><option>Cardiac</option><option>Respiratory</option><option>Behavioral</option><option>Other</option></datalist></div>
+  </div></section>
+
+  <section class="section"><div class="section-title">C · Complaint</div><div class="section-content">
+   <div class="field"><label for="gender">Gender</label><select id="gender"><option value="">Select</option><option value="M">Male</option><option value="F">Female</option><option value="NA">Not applicable</option></select></div>
+   <div class="field"><label for="dob">Date of birth (MMDDYYYY)</label><input id="dob" inputmode="numeric" maxlength="8" placeholder="MMDDYYYY"><span id="age" class="hint">Age calculated from DOB</span></div>
+   <div class="field"><label for="complain">Chief complaint</label><input id="complain" list="complaints" placeholder="Enter or choose"><datalist id="complaints"><option>Chest pain</option><option>Shortness of breath</option><option>Abdominal pain</option><option>Altered mental status</option><option>Fall</option><option>Injury</option><option>Seizure</option><option>Syncope</option><option>Weakness</option><option>Stroke symptoms</option><option>Overdose</option><option>Cardiac arrest</option></datalist></div>
+   <div class="field"><label for="pain">Pain reported?</label><select id="pain"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+   <div class="field full"><label for="complaintDesc">Patient complaint description</label><textarea id="complaintDesc" placeholder="Patient's description, in their own words where appropriate"></textarea></div>
+   <div class="field"><label>Onset</label><div class="unit-control"><input id="onsetValue" inputmode="decimal" placeholder="Duration"><div class="unit-buttons" data-target="onsetUnit"><button type="button" data-value="months">M</button><button type="button" data-value="weeks">W</button><button type="button" data-value="days">D</button><button type="button" data-value="hours">H</button><button type="button" data-value="minutes">M</button><button type="button" data-value="seconds">S</button></div></div><input type="hidden" id="onsetUnit"><span class="hint">M = Months or Minutes; hover/tap labels identify each option.</span></div>
+   <div class="field"><label for="provocations">Provocation</label><input id="provocations" placeholder="What makes it worse?"></div>
+   <div class="field"><label for="painQuality">Quality of pain</label><input id="painQuality" list="qualities" placeholder="Enter or choose"><datalist id="qualities"><option>Sharp</option><option>Dull</option><option>Stabbing</option><option>Crushing</option><option>Burning</option><option>Aching</option><option>Pressure</option><option>Throbbing</option><option>Radiating</option></datalist></div>
+   <div class="field"><label for="painRegion">Region affected</label><input id="painRegion" placeholder="Body region(s), comma separated"></div>
+   <div class="field"><label for="painSeverity">Pain severity (0–10)</label><input id="painSeverity" type="number" min="0" max="10" step="1"></div>
+   <div class="field full"><label for="palliations">Relieved by</label><input id="palliations" placeholder="What makes it better?"></div>
+  </div></section>
+
+  <section class="section"><div class="section-title">H · History</div><div class="section-content">
+   <div class="field full"><label for="history">Past medical history</label><textarea id="history" placeholder="Enter medical history; separate multiple items with commas"></textarea></div>
+   <div class="field full"><label for="historyAdditional">Additional patient history</label><textarea id="historyAdditional"></textarea></div>
+   <div class="field full"><label for="medications">Current medications</label><input id="medications" list="medOptions" placeholder="Enter medication(s), comma separated"><datalist id="medOptions"><option>Unknown</option><option>Patient unable to provide</option><option>None reported</option></datalist></div>
+   <div class="field"><label for="allergies">Allergies</label><input id="allergies" placeholder="Enter allergy/allergies"></div>
+   <div class="field"><label>Last oral intake</label><div class="unit-control"><input id="oralValue" inputmode="decimal" placeholder="Duration"><div class="unit-buttons" data-target="oralUnit"><button type="button" data-value="months">M</button><button type="button" data-value="weeks">W</button><button type="button" data-value="days">D</button><button type="button" data-value="hours" class="active">H</button><button type="button" data-value="minutes">M</button><button type="button" data-value="seconds">S</button></div></div><input type="hidden" id="oralUnit" value="hours"></div>
+   <div class="field full"><label for="events">Events leading to complaint</label><textarea id="events"></textarea></div>
+  </div></section>
+
+  <section class="section"><div class="section-title">A · Assessment</div><div class="section-content">
+   <div class="field full"><label for="appearance">Visible appearance</label><textarea id="appearance"></textarea></div>
+   <div class="field full"><label>Initial vital signs <span class="hint">· Add a set each time vitals are documented</span></label><div id="initialVitals"></div><button type="button" id="addInitial" class="primary">＋ Add vital-sign set</button></div>
+   <div class="field full"><label for="diagnostics">Diagnostics</label><textarea id="diagnostics" placeholder="ECG, glucose, procedures/tests, findings, etc."></textarea></div>
+   <div class="field full"><label for="physicalDone">Physical assessment completed?</label><select id="physicalDone"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+   <div id="physicalFields" class="field full hidden"><div class="section-content" style="padding:0">
+    <div class="field"><label for="airway">Airway</label><input id="airway" placeholder="Findings"></div>
+    <div class="field"><label for="skin">Skin condition</label><input id="skin" placeholder="Findings"></div>
+    <div class="field"><label for="head">Head</label><input id="head"></div><div class="field"><label for="face">Face</label><input id="face"></div>
+    <div class="field"><label for="pupils">Pupils</label><input id="pupils"></div><div class="field"><label for="neck">Neck</label><input id="neck"></div>
+    <div class="field"><label for="chest">Chest</label><input id="chest"></div>
+    <div class="field"><label for="lungAssessed">Lung sounds assessed?</label><select id="lungAssessed"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+    <div class="field hidden" id="lungField"><label for="lungs">Lung sounds</label><input id="lungs"></div>
+    <div class="field"><label for="abdomen">Abdomen</label><input id="abdomen"></div><div class="field"><label for="pelvis">Pelvis</label><input id="pelvis"></div>
+    <div class="field"><label for="spine">Back / spine</label><input id="spine"></div>
+    <div class="field full"><label>Extremities assessed</label><div class="choice" id="limbChoices">
+      <label><input type="checkbox" value="la"> Left arm</label><label><input type="checkbox" value="ra"> Right arm</label><label><input type="checkbox" value="ll"> Left leg</label><label><input type="checkbox" value="rl"> Right leg</label>
+    </div><div id="limbFields"></div></div>
+   </div></div>
+  </div></section>
+
+  <section class="section"><div class="section-title">R · Treatment</div><div class="section-content">
+   <div class="field full"><label for="treatments">Treatments provided</label><textarea id="treatments"></textarea></div>
+   <div class="field full"><label for="medsGiven">Medications administered?</label><select id="medsGiven"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+   <div class="field full hidden" id="medicationArea"><div id="medicationEntries"></div><button type="button" id="addMedication" class="primary">＋ Add medication</button></div>
+  </div></section>
+
+  <section class="section"><div class="section-title">T · Transport</div><div class="section-content">
+   <div class="field"><label for="destination">Destination name</label><input id="destination" list="destinations" placeholder="Enter or choose"><datalist id="destinations"><option>Emergency Department</option><option>Trauma Center</option><option>Freestanding Emergency Department</option><option>Refused transport</option></datalist></div>
+   <div class="field"><label for="urgency">Transport urgency</label><input id="urgency" list="urgencies" placeholder="Enter or choose"><datalist id="urgencies"><option>Emergent</option><option>Non-emergent</option><option>Code 3</option><option>Code 2</option></datalist></div>
+   <div class="field full"><label for="reassessed">Patient reassessed during transport?</label><select id="reassessed"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+   <div class="field full hidden" id="reassessArea"><label>Transport reassessment vital signs</label><div id="reassessVitals"></div><button type="button" id="addReassess" class="primary">＋ Add reassessment set</button></div>
+   <div class="field full"><label for="careTransferred">Patient care transferred?</label><select id="careTransferred"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
+   <div class="field hidden" id="transferLocationField"><label for="transferLocation">Patient transfer location</label><input id="transferLocation"></div>
+   <div class="field hidden" id="bedField"><label for="bedNumber">Bed number (if applicable)</label><input id="bedNumber"></div>
+  </div></section>
+ </div>
+</section>
+
+<section class="panel report-wrap" id="reportPanel">
+ <div class="panel-head"><div><h2>Generated narrative</h2><p>Review and edit the report before copying.</p></div><button type="button" class="mobile-report-toggle" id="toggleReport">Hide</button></div>
+ <div class="report-area"><textarea id="report" spellcheck="true" aria-label="Editable generated narrative" placeholder="Your D-CHART narrative will appear here..."></textarea>
+ <div class="report-actions" style="margin-top:10px"><button type="button" class="primary" id="copyBtn">Copy report</button><button type="button" id="refreshBtn">Regenerate</button></div>
+ <p class="report-note">The narrative updates as you complete the form. Direct edits remain until the next form change or regeneration.</p></div>
+</section>
+</main>
+<footer>Client-side prototype. Patient/report entries are held in page memory only and are not intentionally saved or transmitted. Unit designation and display preferences are stored locally on this device. Follow your agency's documentation policies and approved systems.</footer>
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const value = id => ($(id)?.value || "").trim();
+const esc = s => String(s ?? "").trim();
+const prefKey = "dchart.preferences.v1";
+const palette = {
+ blue:["#5597f5","85,151,245"],red:["#e66b70","230,107,112"],yellow:["#d7a92e","215,169,46"],
+ green:["#36ad83","54,173,131"],purple:["#a17be8","161,123,232"],orange:["#e78a43","231,138,67"],
+ gray:["#8793a3","135,147,163"],contrast:["#ffffff","255,255,255"]
+};
+let prefs={unit:"",theme:"dark",accent:"blue"};
+try{prefs={...prefs,...JSON.parse(localStorage.getItem(prefKey)||"{}")}}catch{}
+function savePrefs(){try{localStorage.setItem(prefKey,JSON.stringify(prefs))}catch{}}
+function applyPrefs(){
+ document.documentElement.dataset.theme=prefs.theme;
+ document.documentElement.dataset.accent=prefs.accent;
+ const [a,rgb]=palette[prefs.accent]||palette.blue;
+ document.documentElement.style.setProperty("--accent",a);
+ document.documentElement.style.setProperty("--accent-rgb",rgb);
+ $("theme").value=prefs.theme;$("accent").value=prefs.accent;$("unit").value=prefs.unit||"";
+}
+applyPrefs();
+$("theme").addEventListener("change",e=>{prefs.theme=e.target.value;savePrefs();applyPrefs()});
+$("accent").addEventListener("change",e=>{prefs.accent=e.target.value;savePrefs();applyPrefs()});
+$("unit").addEventListener("input",e=>{prefs.unit=e.target.value;savePrefs()});
+
+function addUnitButtons(){
+ document.querySelectorAll(".unit-buttons").forEach(group=>{
+  const hidden=$(group.dataset.target);
+  group.querySelectorAll("button").forEach((b,i)=>{
+   const full=b.dataset.value;
+   b.title=full[0].toUpperCase()+full.slice(1);
+   b.setAttribute("aria-label",full);
+   b.addEventListener("click",()=>{
+    group.querySelectorAll("button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");hidden.value=full;markAll();generate();
+   });
+  });
+  if(hidden.value){group.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.value===hidden.value))}
+ });
+}
+addUnitButtons();
+
+function field(label,id,placeholder="",type="text"){return `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" placeholder="${placeholder}"></div>`}
+function makeVitals(containerId){
+ const container=$(containerId);let count=0;
+ function add(){
+  count++;const n=container.querySelectorAll(".repeat-card").length+1,card=document.createElement("div");card.className="repeat-card";
+  card.innerHTML=`<div class="repeat-head"><span>Vital-sign set ${n}</span><button type="button" class="remove danger">Remove</button></div>
+   <div class="field"><label>Recorded time</label><div class="inline"><input class="v-time" type="datetime-local" step="1"><button type="button" class="now">Now</button></div></div>
+   <div class="vitals-grid">
+    <div class="field"><label>Respirations</label><input class="resp" inputmode="decimal" placeholder=" /min"></div>
+    <div class="field"><label>Pulse rate</label><input class="pulse" inputmode="decimal" placeholder=" bpm"></div>
+    <div class="field"><label>Pulse quality</label><input class="pulseq" list="pulseQualities" placeholder="Quality"></div>
+    <div class="field"><label>Blood pressure</label><div class="inline"><input class="bps" inputmode="numeric" placeholder="Systolic"><input class="bpd" inputmode="numeric" placeholder="Diastolic"></div></div>
+    <div class="field"><label>SpO2 (%)</label><input class="spo2" inputmode="decimal"></div>
+    <div class="field"><label>Temperature (°)</label><input class="temp" inputmode="decimal"></div>
+    <div class="field"><label>Blood glucose (mg/dL)</label><input class="bgl" inputmode="decimal"></div>
+   </div>`;
+  container.appendChild(card);
+  card.querySelector(".remove").addEventListener("click",()=>{card.remove();markAll();generate()});
+  card.querySelector(".now").addEventListener("click",()=>{const d=new Date();const local=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,19);card.querySelector(".v-time").value=local;markAll();generate()});
+  card.querySelectorAll("input").forEach(i=>i.addEventListener("input",()=>{markAll();generate()}));
+  markAll();generate();
+ }
+ return {add,read:()=>[...container.querySelectorAll(".repeat-card")].map(card=>{
+  const get=c=>card.querySelector("."+c).value.trim();
+  return {time:get("v-time"),resp:get("resp"),pulse:get("pulse"),pulseq:get("pulseq"),bp:[get("bps"),get("bpd")].filter(Boolean).join("/"),spo2:get("spo2"),temp:get("temp"),bgl:get("bgl")};
+ })};
+}
+const initial=makeVitals("initialVitals"),reassess=makeVitals("reassessVitals");
+initial.add();$("addInitial").onclick=initial.add;$("addReassess").onclick=reassess.add;
+const pulseDL=document.createElement("datalist");pulseDL.id="pulseQualities";["Regular","Irregular","Strong","Weak","Thready","Bounding"].forEach(v=>{let o=document.createElement("option");o.value=v;pulseDL.appendChild(o)});document.body.appendChild(pulseDL);
+
+let medCount=0;
+function addMedication(){
+ medCount++;const card=document.createElement("div");card.className="repeat-card";
+ card.innerHTML=`<div class="repeat-head"><span>Medication ${medCount}</span><button type="button" class="remove danger">Remove</button></div>
+ <div class="section-content" style="padding:0">
+  <div class="field"><label>Medication type</label><input class="medtype" list="medTypes" placeholder="Medication"></div>
+  <div class="field"><label>Dosage</label><input class="meddose" placeholder="Dose"></div>
+  <div class="field full"><label>Time given</label><div class="inline"><input class="medtime" type="datetime-local" step="1"><button type="button" class="now">Now</button></div></div>
+ </div>`;
+ $("medicationEntries").appendChild(card);
+ card.querySelector(".remove").onclick=()=>{card.remove();generate()};
+ card.querySelector(".now").onclick=()=>{const d=new Date(),local=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,19);card.querySelector(".medtime").value=local;generate()};
+ card.querySelectorAll("input").forEach(i=>i.addEventListener("input",generate));generate();
+}
+const medDL=document.createElement("datalist");medDL.id="medTypes";["Aspirin","Epinephrine","Nitroglycerin","Albuterol","Naloxone","Ondansetron","Acetaminophen","Dextrose"].forEach(v=>{const o=document.createElement("option");o.value=v;medDL.appendChild(o)});document.body.appendChild(medDL);
+$("addMedication").onclick=addMedication;
+$("medsGiven").onchange=()=>{$("medicationArea").classList.toggle("hidden",value("medsGiven")!=="Yes");generate()};
+$("physicalDone").onchange=()=>{$("physicalFields").classList.toggle("hidden",value("physicalDone")!=="Yes");generate()};
+$("lungAssessed").onchange=()=>{$("lungField").classList.toggle("hidden",value("lungAssessed")!=="Yes");generate()};
+$("reassessed").onchange=()=>{$("reassessArea").classList.toggle("hidden",value("reassessed")!=="Yes");if(value("reassessed")==="Yes"&&$("reassessVitals").children.length===0)reassess.add();generate()};
+$("careTransferred").onchange=()=>{const yes=value("careTransferred")==="Yes";$("transferLocationField").classList.toggle("hidden",!yes);$("bedField").classList.toggle("hidden",!yes);generate()};
+$("limbChoices").addEventListener("change",()=>{
+ const selected=[...$("limbChoices").querySelectorAll("input:checked")].map(x=>x.value);
+ $("limbFields").innerHTML="";
+ const names={la:"Left arm",ra:"Right arm",ll:"Left leg",rl:"Right leg"};
+ selected.forEach(k=>{
+  const wrap=document.createElement("div");wrap.className="repeat-card";
+  wrap.innerHTML=`<div class="repeat-head">${names[k]}</div><div class="section-content" style="padding:0">
+   <div class="field"><label>Pulse / Motor / Sensation / Reflexes</label><input id="rpms_${k}"></div>
+   <div class="field"><label>Physical observations</label><input id="physical_${k}"></div></div>`;
+  $("limbFields").appendChild(wrap);
+  wrap.querySelectorAll("input").forEach(i=>i.addEventListener("input",()=>{markAll();generate()}));
+ });
+ markAll();generate();
+});
+
+function dobAge(){
+ const raw=value("dob").replace(/\D/g,"");if(raw.length!==8)return "";
+ const m=+raw.slice(0,2),d=+raw.slice(2,4),y=+raw.slice(4);
+ const date=new Date(y,m-1,d),now=new Date();
+ if(date.getFullYear()!==y||date.getMonth()!==m-1||date.getDate()!==d||date>now)return "";
+ let months=(now.getFullYear()-y)*12+now.getMonth()-m;
+ if(now.getDate()<d)months--;
+ if(months<12){let weeks=Math.floor((now-date)/604800000);return `${Math.max(0,weeks)} weeks`;}
+ let years=now.getFullYear()-y;if(now.getMonth()<m-1||(now.getMonth()===m-1&&now.getDate()<d))years--;
+ return `${years} years`;
+}
+function markAll(){
+ document.querySelectorAll("#form input:not([type=checkbox]):not([type=hidden]),#form textarea,#form select").forEach(el=>{
+  const wrap=el.closest(".field");if(!wrap)return;
+  const hidden=el.closest(".hidden")||el.closest(".section")?.classList.contains("hidden");
+  if(hidden){wrap.classList.remove("missing");return;}
+  const isOptionalEmpty=!el.value.trim()&&!el.disabled;
+  wrap.classList.toggle("missing",isOptionalEmpty);
+ });
+}
+function clean(s){return esc(s).replace(/\s+/g," ")}
+function sentence(parts){return parts.filter(Boolean).join(" ").trim()}
+function vitalsSentence(v,label){
+ const sets=v.filter(x=>Object.values(x).some(Boolean));
+ return sets.map((x,i)=>{
+  const bits=[];
+  if(x.resp)bits.push(`respirations ${x.resp}`);
+  if(x.pulse)bits.push(`pulse ${x.pulse}${x.pulseq?` (${x.pulseq})`:""}`);
+  else if(x.pulseq)bits.push(`pulse quality ${x.pulseq}`);
+  if(x.bp)bits.push(`blood pressure ${x.bp}`);
+  if(x.spo2)bits.push(`SpO2 ${x.spo2}%`);
+  if(x.temp)bits.push(`temperature ${x.temp}°`);
+  if(x.bgl)bits.push(`blood glucose ${x.bgl} mg/dL`);
+  if(!bits.length)return "";
+  const time=x.time?new Date(x.time).toLocaleString():"time not specified";
+  return `${label} set ${i+1} (${time}): ${bits.join(", ")}.`;
+ }).filter(Boolean);
+}
+function generate(){
+ const out=[];
+ const dispatchParts=[];
+ if(value("unit"))dispatchParts.push(`${value("unit")} dispatched`);
+ else if(value("sceneLocation")||value("sceneType"))dispatchParts.push("Dispatched");
+ if(value("sceneLocation"))dispatchParts.push(`to ${value("sceneLocation")}`);
+ if(value("sceneType"))dispatchParts.push(`for a ${value("sceneType")} incident`);
+ if(dispatchParts.length)out.push(dispatchParts.join(" ").replace(/\s+/g," ")+".");
+ const g=value("gender")==="M"?"male":value("gender")==="F"?"female":"";
+ const dob=value("dob"),age=dobAge();$("age").textContent=age?`Calculated age: ${age}`:"Age calculated from DOB";
+ const patient=[g,dob?`DOB ${dob.slice(0,2)}/${dob.slice(2,4)}/${dob.slice(4)}`:"",age?`(${age})`:""].filter(Boolean).join(", ");
+ const c=[];
+ if(patient)c.push(`Patient identified as ${patient}.`);
+ if(value("complain"))c.push(`Chief complaint: ${value("complain")}.`);
+ if(value("complaintDesc"))c.push(value("complaintDesc").replace(/[.!?]?$/,"."));
+ if(value("pain")==="Yes"){
+  const p=[];
+  if(value("onsetValue"))p.push(`onset ${value("onsetValue")} ${value("onsetUnit")||"time unit"}`);
+  if(value("provocations"))p.push(`provoked by ${value("provocations")}`);
+  if(value("painQuality"))p.push(`described as ${value("painQuality")}`);
+  if(value("painRegion"))p.push(`affecting ${value("painRegion")}`);
+  if(value("painSeverity"))p.push(`severity ${value("painSeverity")}/10`);
+  if(value("palliations"))p.push(`relieved by ${value("palliations")}`);
+  if(p.length)c.push(`Patient reports pain, ${p.join("; ")}.`);
+ }else if(value("pain")==="No")c.push("Patient denies pain.");
+ if(c.length)out.push(c.join(" "));
+ const h=[];
+ if(value("history"))h.push(`Past medical history includes ${value("history")}.`);
+ if(value("historyAdditional"))h.push(`Additional history: ${value("historyAdditional")}.`);
+ if(value("medications"))h.push(`Current medications: ${value("medications")}.`);
+ if(value("allergies"))h.push(`Allergies: ${value("allergies")}.`);
+ if(value("oralValue"))h.push(`Last oral intake was ${value("oralValue")} ${value("oralUnit")||"hours"} prior.`);
+ if(value("events"))h.push(`Events leading to complaint: ${value("events")}.`);
+ if(h.length)out.push(h.join(" "));
+ const a=[];
+ if(value("appearance"))a.push(`Patient observed with ${value("appearance")}.`);
+ a.push(...vitalsSentence(initial.read(),"Initial vital signs"));
+ if(value("diagnostics"))a.push(`Diagnostics: ${value("diagnostics")}.`);
+ if(value("physicalDone")==="Yes"){
+  const exam=[];
+  a.push("Physical assessment completed.");
+  const fields=[["airway","Airway"],["skin","Skin"],["head","Head"],["face","Face"],["pupils","Pupils"],["neck","Neck"],["chest","Chest"],["abdomen","Abdomen"],["pelvis","Pelvis"],["spine","Back/spine"]];
+  fields.forEach(([id,label])=>{if(value(id))exam.push(`${label}: ${value(id)}`)});
+  if(value("lungAssessed")==="Yes"&&value("lungs"))exam.push(`Lung sounds: ${value("lungs")}`);
+  [...$("limbChoices").querySelectorAll("input:checked")].forEach(cb=>{
+   const k=cb.value,name={la:"Left arm",ra:"Right arm",ll:"Left leg",rl:"Right leg"}[k];
+   const r=$(`rpms_${k}`)?.value.trim(),p=$(`physical_${k}`)?.value.trim();
+   if(r||p)exam.push(`${name}: ${[r?`P/R/M/S: ${r}`:"",p?`physical observations: ${p}`:""].filter(Boolean).join("; ")}`);
+  });
+  if(exam.length)a.push(`Physical assessment: ${exam.join(". ")}.`);
+ }
+ if(a.length)out.push(a.join(" "));
+ const r=[];
+ if(value("treatments"))r.push(`Treatments provided: ${value("treatments")}.`);
+ if(value("medsGiven")==="Yes"){
+  const meds=[...$("medicationEntries").querySelectorAll(".repeat-card")].map(card=>{
+   const t=card.querySelector(".medtype").value.trim(),d=card.querySelector(".meddose").value.trim(),tm=card.querySelector(".medtime").value;
+   if(!t&&!d&&!tm)return "";
+   return [t,d?`dose ${d}`:"",tm?`given ${new Date(tm).toLocaleString()}`:""].filter(Boolean).join(", ");
+  }).filter(Boolean);
+  if(meds.length)r.push(`Medications administered: ${meds.join("; ")}.`);
+ }
+ if(r.length)out.push(r.join(" "));
+ const t=[];
+ if(value("destination"))t.push(`Patient transported to ${value("destination")}${value("urgency")?` (${value("urgency")})`:""}.`);
+ else if(value("urgency"))t.push(`Transport urgency: ${value("urgency")}.`);
+ if(value("reassessed")==="Yes"){
+  const rs=vitalsSentence(reassess.read(),"Transport reassessment");
+  if(rs.length)t.push(...rs);
+  else t.push("Patient reassessed during transport.");
+ }else if(value("reassessed")==="No")t.push("Patient not reassessed during transport.");
+ if(value("careTransferred")==="Yes"){
+  const loc=value("transferLocation"),bed=value("bedNumber");
+  t.push(`Patient care transferred${loc?` at ${loc}`:""}${bed?`, bed ${bed}`:""}.`);
+ }else if(value("careTransferred")==="No")t.push("Patient care not transferred.");
+ if(t.length)out.push(t.join(" "));
+ const text=out.join("\n\n");
+ $("report").value=text;
+ markAll();
+}
+let lastGenerated="";
+function formChanged(){generate();lastGenerated=$("report").value}
+$("form").addEventListener("input",e=>{if(e.target.id==="unit")return;formChanged()});
+$("form").addEventListener("change",e=>{if(e.target.id==="unit")return;formChanged()});
+$("refreshBtn").onclick=generate;
+$("copyBtn").onclick=async()=>{
+ try{await navigator.clipboard.writeText($("report").value);$("copyBtn").textContent="Copied";setTimeout(()=>$("copyBtn").textContent="Copy report",1400)}
+ catch{ $("report").select();document.execCommand("copy");$("copyBtn").textContent="Copied";setTimeout(()=>$("copyBtn").textContent="Copy report",1400)}
+};
+$("clearBtn").onclick=()=>{
+ if(!confirm("Start a new report? All patient and incident information in this page will be cleared. Your unit designation and display preferences will be retained."))return;
+ const keepUnit=prefs.unit;
+ $("form").querySelectorAll("input,textarea,select").forEach(el=>{
+  if(el.id==="unit")return;
+  if(el.type==="checkbox")el.checked=false;else el.value="";
+ });
+ $("onsetUnit").value="";$("oralUnit").value="hours";
+ document.querySelectorAll(".unit-buttons").forEach(g=>g.querySelectorAll("button").forEach(b=>b.classList.toggle("active",g.dataset.target==="oralUnit"&&b.dataset.value==="hours")));
+ $("initialVitals").innerHTML="";$("reassessVitals").innerHTML="";$("limbFields").innerHTML="";$("medicationEntries").innerHTML="";
+ initial.add();medCount=0;
+ ["physicalFields","lungField","medicationArea","reassessArea","transferLocationField","bedField"].forEach(id=>$(id).classList.add("hidden"));
+ $("report").value="";$("unit").value=keepUnit;markAll();generate();
+};
+$("toggleReport").onclick=()=>{const p=$("reportPanel");p.classList.toggle("collapsed");$("toggleReport").textContent=p.classList.contains("collapsed")?"Show":"Hide"};
+markAll();generate();
+})();
+</script>
+</body>
+</html>
