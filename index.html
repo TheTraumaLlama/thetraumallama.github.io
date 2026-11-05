@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>D-CHART | EMS Report Builder</title>
+<title>The Trauma Llama Narrative</title>
 <style>
 :root{
   color-scheme:dark;
@@ -116,7 +116,7 @@ footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);fon
 </head>
 <body>
 <header><div class="topbar">
-  <div class="brand"><div class="mark">D</div><div><h1>D-CHART Report Builder</h1><small>EMS patient care narrative</small></div></div>
+  <div class="brand"><div class="mark">D</div><div><h1>The Trauma Llama</h1><small>DCHART Patient Care Narrative</small></div></div>
   <div class="toolbar">
     <div class="settings">
       <select id="theme" aria-label="Theme"><option value="dark">Dark</option><option value="light">Light</option></select>
@@ -131,19 +131,83 @@ footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);fon
  <div class="form-body" id="form" autocomplete="off">
   <section class="section"><div class="section-title">D · Dispatch</div><div class="section-content">
    <div class="field"><label for="unit">Unit designation</label><input id="unit" data-pref="unit" placeholder="e.g. Medic 1"></div>
-   <div class="field"><label for="sceneLocation">Scene location</label><input id="sceneLocation" list="sceneLocations" placeholder="Enter or choose"><datalist id="sceneLocations"><option>Residence</option><option>Private residence</option><option>Roadway</option><option>Business</option><option>Healthcare facility</option><option>Public place</option><option>School</option><option>Workplace</option></datalist></div>
-   <div class="field full"><label for="sceneType">Scene type</label><input id="sceneType" list="sceneTypes" placeholder="Enter or choose"><datalist id="sceneTypes"><option>Medical</option><option>Trauma</option><option>Motor vehicle collision</option><option>Fall</option><option>Cardiac</option><option>Respiratory</option><option>Behavioral</option><option>Other</option></datalist></div>
+   <div class="field"><label for="sceneLocation">Scene location</label><input id="sceneLocation" list="sceneLocations" placeholder="Enter or choose"><datalist id="sceneLocations">
+      <option>Lee Memorial Hospital (LMH)</option>
+      <option>Golisano Childrens Hospital (GCH)</option>
+      <option>HCA Florida Lehigh Hospital (LRH)</option>
+      <option>Cape Coral Hospital (CCH)</option>
+      <option>Gulf Coast Medical Center (GCMC)</option>
+      <option>NCH Baker Downtown Hospital (NCH Baker)</option>
+      <option>Healthpark Medical Center (HPMC)</option>
+      <option>Englewood Community Hospital (ECH)</option>
+      <option>HCA Florida Fawcett Hospital (HCA Fawcett)</option>
+      <option>AdventHealth Port Charlotte (AVH Port Charlotte)</option>
+      <option>Physicians Regional Medical Center - Pine Ridge (PHPR)</option>
+      <option>Physicians Regional Medical Center - Collier Blvd</option>
+      <option>Sarasota Memorial Hospital (SMH)</option>
+      <option>Sarasota Memorial Hospital - Venice (SMHV)</option>
+      <option>Coconut Point Freestanding ER</option>
+      <option>NCH Bonita Freestanding ER</option>
+      <option>AdventHealth Cape Coral Freestanding ER</option>
+      <option>HCA Freestanding ER - Cape Coral</option>
+      <option>HCA Freestanding ER - Fort Myers</option>
+      <option>RSW Southwest Florida International Airport</option>
+      <option>FMY Page Field Airport</option>
+      <option>APF Naples Airport</option>
+    </datalist>
+  </div>
+   <div class="field full"><label for="sceneType">Scene type</label><input id="sceneType" list="sceneTypes" placeholder="Enter or choose"><datalist id="sceneTypes">
+      <option>Residence</option>
+      <option>Private Residence</option>
+      <option>Assisted Living Facility</option>
+      <option>Doctors Office</option>
+      <option>Healthcare Facility</option>
+      <option>Public Place</option>
+      <option>School</option>
+      <option>Workplace</option>
+  </datalist></div>
   </div></section>
 
   <section class="section"><div class="section-title">C · Complaint</div><div class="section-content">
-   <div class="field"><label for="gender">Gender</label><select id="gender"><option value="">Select</option><option value="M">Male</option><option value="F">Female</option><option value="NA">Not applicable</option></select></div>
+   <div class="field"><label for="gender">Gender</label><select id="gender">
+      <option value="">Select</option>
+      <option value="M">Male</option>
+      <option value="F">Female</option>
+      <option value="NA">Not applicable</option>
+    </select>
+  </div>
    <div class="field"><label for="dob">Date of birth (MMDDYYYY)</label><input id="dob" inputmode="numeric" maxlength="8" placeholder="MMDDYYYY"><span id="age" class="hint">Age calculated from DOB</span></div>
-   <div class="field"><label for="complain">Chief complaint</label><input id="complain" list="complaints" placeholder="Enter or choose"><datalist id="complaints"><option>Chest pain</option><option>Shortness of breath</option><option>Abdominal pain</option><option>Altered mental status</option><option>Fall</option><option>Injury</option><option>Seizure</option><option>Syncope</option><option>Weakness</option><option>Stroke symptoms</option><option>Overdose</option><option>Cardiac arrest</option></datalist></div>
+   <div class="field"><label for="complain">Chief complaint</label><input id="complain" list="complaints" placeholder="Enter or choose"><datalist id="complaints">
+      <option>Chest pain</option>
+      <option>Shortness of breath</option>
+      <option>Abdominal pain</option>
+      <option>Altered mental status</option>
+      <option>Fall</option>
+      <option>Injury</option>
+      <option>Seizure</option>
+      <option>Syncope</option>
+      <option>Weakness</option>
+      <option>Stroke symptoms</option>
+      <option>Overdose</option>
+      <option>Cardiac arrest</option>
+    </datalist>
+  </div>
    <div class="field"><label for="pain">Pain reported?</label><select id="pain"><option value="">Select</option><option>Yes</option><option>No</option></select></div>
    <div class="field full"><label for="complaintDesc">Patient complaint description</label><textarea id="complaintDesc" placeholder="Patient's description, in their own words where appropriate"></textarea></div>
    <div class="field"><label>Onset</label><div class="unit-control"><input id="onsetValue" inputmode="decimal" placeholder="Duration"><div class="unit-buttons" data-target="onsetUnit"><button type="button" data-value="months">M</button><button type="button" data-value="weeks">W</button><button type="button" data-value="days">D</button><button type="button" data-value="hours">H</button><button type="button" data-value="minutes">M</button><button type="button" data-value="seconds">S</button></div></div><input type="hidden" id="onsetUnit"><span class="hint">M = Months or Minutes; hover/tap labels identify each option.</span></div>
    <div class="field"><label for="provocations">Provocation</label><input id="provocations" placeholder="What makes it worse?"></div>
-   <div class="field"><label for="painQuality">Quality of pain</label><input id="painQuality" list="qualities" placeholder="Enter or choose"><datalist id="qualities"><option>Sharp</option><option>Dull</option><option>Stabbing</option><option>Crushing</option><option>Burning</option><option>Aching</option><option>Pressure</option><option>Throbbing</option><option>Radiating</option></datalist></div>
+   <div class="field"><label for="painQuality">Quality of pain</label><input id="painQuality" list="qualities" placeholder="Enter or choose"><datalist id="qualities">
+      <option>Sharp</option>
+      <option>Dull</option>
+      <option>Stabbing</option>
+      <option>Crushing</option>
+      <option>Burning</option>
+      <option>Aching</option>
+      <option>Pressure</option>
+      <option>Throbbing</option>
+      <option>Radiating</option>
+    </datalist>
+  </div>
    <div class="field"><label for="painRegion">Region affected</label><input id="painRegion" placeholder="Body region(s), comma separated"></div>
    <div class="field"><label for="painSeverity">Pain severity (0–10)</label><input id="painSeverity" type="number" min="0" max="10" step="1"></div>
    <div class="field full"><label for="palliations">Relieved by</label><input id="palliations" placeholder="What makes it better?"></div>
@@ -152,7 +216,12 @@ footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);fon
   <section class="section"><div class="section-title">H · History</div><div class="section-content">
    <div class="field full"><label for="history">Past medical history</label><textarea id="history" placeholder="Enter medical history; separate multiple items with commas"></textarea></div>
    <div class="field full"><label for="historyAdditional">Additional patient history</label><textarea id="historyAdditional"></textarea></div>
-   <div class="field full"><label for="medications">Current medications</label><input id="medications" list="medOptions" placeholder="Enter medication(s), comma separated"><datalist id="medOptions"><option>Unknown</option><option>Patient unable to provide</option><option>None reported</option></datalist></div>
+   <div class="field full"><label for="medications">Current medications</label><input id="medications" list="medOptions" placeholder="Enter medication(s), comma separated"><datalist id="medOptions">
+      <option>None reported</option>
+      <option>Unknown</option>
+      <option>Patient unable to provide</option>
+    </datalist>
+  </div>
    <div class="field"><label for="allergies">Allergies</label><input id="allergies" placeholder="Enter allergy/allergies"></div>
    <div class="field"><label>Last oral intake</label><div class="unit-control"><input id="oralValue" inputmode="decimal" placeholder="Duration"><div class="unit-buttons" data-target="oralUnit"><button type="button" data-value="months">M</button><button type="button" data-value="weeks">W</button><button type="button" data-value="days">D</button><button type="button" data-value="hours" class="active">H</button><button type="button" data-value="minutes">M</button><button type="button" data-value="seconds">S</button></div></div><input type="hidden" id="oralUnit" value="hours"></div>
    <div class="field full"><label for="events">Events leading to complaint</label><textarea id="events"></textarea></div>
