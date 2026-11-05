@@ -111,6 +111,48 @@ footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);fon
  .field.full{grid-column:auto}.vitals-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .panel-head{padding:13px}.settings{width:100%;justify-content:flex-end}
 }
+.tag-input-container {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--field);
+  padding: 6px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.tag-input-container:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .13);
+}
+.tag-input-container input {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 4px;
+  flex: 1;
+  min-width: 120px;
+}
+.med-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(var(--accent-rgb), .15);
+  border: 1px solid rgba(var(--accent-rgb), .35);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--text);
+}
+.med-pill button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+}
 @media(prefers-reduced-motion:no-preference){button,.panel{transition:border-color .15s,background .15s}}
 </style>
 </head>
@@ -217,12 +259,24 @@ footer{max-width:1600px;margin:0 auto;padding:0 22px 22px;color:var(--muted);fon
   <section class="section"><div class="section-title">H · History</div><div class="section-content">
    <div class="field full"><label for="history">Past medical history</label><textarea id="history" placeholder="Enter medical history; separate multiple items with commas"></textarea></div>
    <div class="field full"><label for="historyAdditional">Additional patient history</label><textarea id="historyAdditional"></textarea></div>
-   <div class="field full"><label for="medications">Current medications</label><input id="medications" list="medOptions" placeholder="Enter medication(s), comma separated"><datalist id="medOptions">
-      <option>None reported</option>
-      <option>Unknown</option>
-      <option>Patient unable to provide</option>
-    </datalist>
+   <div class="field full">
+  <label for="medicationsInput">Current medications</label>
+  <div class="tag-input-container" id="medContainer">
+    <div class="pill-box" id="medPills"></div>
+    <input id="medicationsInput" list="medOptions" placeholder="Type or select, then press Tab/Enter">
   </div>
+  <!-- Hidden input that keeps your narrative generator working automatically -->
+  <input type="hidden" id="medications">
+  <datalist id="medOptions">
+    <option value="None reported"></option>
+    <option value="Unknown">
+    <option value="Patient unable to provide">
+    <option value="Aspirin">
+    <option value="Nitroglycerin">
+    <option value="Albuterol">
+    <option value="Epinephrine">
+  </datalist>
+</div>
    <div class="field"><label for="allergies">Allergies</label><input id="allergies" placeholder="Enter allergy/allergies"></div>
    <div class="field"><label>Last oral intake</label><div class="unit-control"><input id="oralValue" inputmode="decimal" placeholder="Duration"><div class="unit-buttons" data-target="oralUnit"><button type="button" data-value="months">M</button><button type="button" data-value="weeks">W</button><button type="button" data-value="days">D</button><button type="button" data-value="hours" class="active">H</button><button type="button" data-value="minutes">M</button><button type="button" data-value="seconds">S</button></div></div><input type="hidden" id="oralUnit" value="hours"></div>
    <div class="field full"><label for="events">Events leading to complaint</label><textarea id="events"></textarea></div>
@@ -531,6 +585,50 @@ $("clearBtn").onclick=()=>{
 $("toggleReport").onclick=()=>{const p=$("reportPanel");p.classList.toggle("collapsed");$("toggleReport").textContent=p.classList.contains("collapsed")?"Show":"Hide"};
 markAll();generate();
 })();
+
+const medInput = $("medicationsInput");
+const medPillsContainer = $("medPills");
+const hiddenMedField = $("medications");
+let selectedMeds = [];
+
+function updateMedications() {
+  hiddenMedField.value = selectedMeds.join(", ");
+  // Triggers your report generator and missing-field checks
+  formChanged(); 
+}
+
+function renderMeds() {
+  medPillsContainer.innerHTML = "";
+  selectedMeds.forEach((med, index) => {
+    const pill = document.createElement("div");
+    pill.className = "med-pill";
+    pill.innerHTML = `<span>${med}</span><button type="button" aria-label="Remove">&times;</button>`;
+    pill.querySelector("button").onclick = () => {
+      selectedMeds.splice(index, 1);
+      renderMeds();
+      updateMedications();
+    };
+    medPillsContainer.appendChild(pill);
+  });
+}
+
+medInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === "Tab") {
+    const val = medInput.value.trim();
+    if (val) {
+      // Prevent tab from leaving field if they are actively choosing/typing a med tag
+      if (e.key === "Enter" || (e.key === "Tab" && medInput === document.activeElement)) {
+        if (!selectedMeds.includes(val)) {
+          selectedMeds.push(val);
+          renderMeds();
+          updateMedications();
+        }
+        medInput.value = "";
+        if (e.key === "Enter") e.preventDefault();
+      }
+    }
+  }
+});
 </script>
 </body>
 </html>
