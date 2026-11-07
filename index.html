@@ -254,6 +254,30 @@
         font-size: 12px;
         color: var(--muted);
         font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .field-label-actions {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .u-btn {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .u-btn:hover,
+      .u-btn.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
       }
       input,
       select,
@@ -283,7 +307,7 @@
         border-color: var(--accent);
         box-shadow: 0 0 0 1px rgba(230, 182, 92, 0.22);
       }
-      .missing label:after {
+      .missing label:not(.field-label):after {
         content: " · optional";
         font-weight: 500;
         color: var(--warn);
@@ -1239,7 +1263,24 @@
           </section>
 
           <section class="section">
-            <div class="section-title">A · Assessment</div>
+            <div class="section-title">
+              <span>A · Assessment</span>
+              <label
+                style="
+                  font-size: 11px;
+                  font-weight: 500;
+                  cursor: pointer;
+                  color: var(--text);
+                "
+              >
+                <input
+                  type="checkbox"
+                  id="allUnremarkable"
+                  style="accent-color: var(--accent); margin-right: 4px"
+                />
+                Mark all unremarkable
+              </label>
+            </div>
             <div class="section-content">
               <div class="field full">
                 <label for="appearance">Visible appearance</label
@@ -1275,27 +1316,67 @@
               <div id="physicalFields" class="field full hidden">
                 <div class="section-content" style="padding: 0">
                   <div class="field">
-                    <label for="airway">Airway</label
-                    ><input id="airway" placeholder="Findings" />
+                    <div class="field-label">
+                      <label for="airway">Airway</label>
+                      <button type="button" class="u-btn" data-target="airway">
+                        U
+                      </button>
+                    </div>
+                    <input id="airway" placeholder="Findings" />
                   </div>
                   <div class="field">
-                    <label for="skin">Skin condition</label
-                    ><input id="skin" placeholder="Findings" />
+                    <div class="field-label">
+                      <label for="skin">Skin condition</label>
+                      <button type="button" class="u-btn" data-target="skin">
+                        U
+                      </button>
+                    </div>
+                    <input id="skin" placeholder="Findings" />
                   </div>
                   <div class="field">
-                    <label for="head">Head</label><input id="head" />
+                    <div class="field-label">
+                      <label for="head">Head</label>
+                      <button type="button" class="u-btn" data-target="head">
+                        U
+                      </button>
+                    </div>
+                    <input id="head" />
                   </div>
                   <div class="field">
-                    <label for="face">Face</label><input id="face" />
+                    <div class="field-label">
+                      <label for="face">Face</label>
+                      <button type="button" class="u-btn" data-target="face">
+                        U
+                      </button>
+                    </div>
+                    <input id="face" />
                   </div>
                   <div class="field">
-                    <label for="pupils">Pupils</label><input id="pupils" />
+                    <div class="field-label">
+                      <label for="pupils">Pupils</label>
+                      <button type="button" class="u-btn" data-target="pupils">
+                        U
+                      </button>
+                    </div>
+                    <input id="pupils" />
                   </div>
                   <div class="field">
-                    <label for="neck">Neck</label><input id="neck" />
+                    <div class="field-label">
+                      <label for="neck">Neck</label>
+                      <button type="button" class="u-btn" data-target="neck">
+                        U
+                      </button>
+                    </div>
+                    <input id="neck" />
                   </div>
                   <div class="field">
-                    <label for="chest">Chest</label><input id="chest" />
+                    <div class="field-label">
+                      <label for="chest">Chest</label>
+                      <button type="button" class="u-btn" data-target="chest">
+                        U
+                      </button>
+                    </div>
+                    <input id="chest" />
                   </div>
                   <div class="field">
                     <label for="lungAssessed">Lung sounds assessed?</label
@@ -1306,16 +1387,40 @@
                     </select>
                   </div>
                   <div class="field hidden" id="lungField">
-                    <label for="lungs">Lung sounds</label><input id="lungs" />
+                    <div class="field-label">
+                      <label for="lungs">Lung sounds</label>
+                      <button type="button" class="u-btn" data-target="lungs">
+                        U
+                      </button>
+                    </div>
+                    <input id="lungs" />
                   </div>
                   <div class="field">
-                    <label for="abdomen">Abdomen</label><input id="abdomen" />
+                    <div class="field-label">
+                      <label for="abdomen">Abdomen</label>
+                      <button type="button" class="u-btn" data-target="abdomen">
+                        U
+                      </button>
+                    </div>
+                    <input id="abdomen" />
                   </div>
                   <div class="field">
-                    <label for="pelvis">Pelvis</label><input id="pelvis" />
+                    <div class="field-label">
+                      <label for="pelvis">Pelvis</label>
+                      <button type="button" class="u-btn" data-target="pelvis">
+                        U
+                      </button>
+                    </div>
+                    <input id="pelvis" />
                   </div>
                   <div class="field">
-                    <label for="spine">Back / spine</label><input id="spine" />
+                    <div class="field-label">
+                      <label for="spine">Back / spine</label>
+                      <button type="button" class="u-btn" data-target="spine">
+                        U
+                      </button>
+                    </div>
+                    <input id="spine" />
                   </div>
                   <div class="field full">
                     <label>Extremities assessed</label>
@@ -1384,10 +1489,26 @@
                   list="urgencies"
                   placeholder="Enter or choose"
                 /><datalist id="urgencies">
+                  <option>Routine</option>
                   <option>Emergent</option>
                   <option>Non-emergent</option>
                   <option>Code 3</option>
                   <option>Code 2</option>
+                </datalist>
+              </div>
+              <div class="field full">
+                <label for="transportPosition">Position During Transport</label>
+                <input
+                  id="transportPosition"
+                  list="transportPositions"
+                  placeholder="Enter or choose position"
+                />
+                <datalist id="transportPositions">
+                  <option>Stretcher / Supine</option>
+                  <option>Sitting / Semi-Fowler's</option>
+                  <option>Left Lateral Recumbent</option>
+                  <option>Right Lateral Recumbent</option>
+                  <option>Prone</option>
                 </datalist>
               </div>
               <div class="field full">
@@ -1546,6 +1667,59 @@
           });
         }
         addUnitButtons();
+
+        // Unremarkable (U) button wiring
+        const assessFieldIds = [
+          "airway",
+          "skin",
+          "head",
+          "face",
+          "pupils",
+          "neck",
+          "chest",
+          "lungs",
+          "abdomen",
+          "pelvis",
+          "spine",
+        ];
+        document.querySelectorAll(".u-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetInput = $(btn.dataset.target);
+            if (!targetInput) return;
+            const isUnremarkable = targetInput.value === "unremarkable";
+            targetInput.value = isUnremarkable ? "" : "unremarkable";
+            btn.classList.toggle("active", !isUnremarkable);
+            checkAllUnremarkableState();
+            markAll();
+            generate();
+          });
+        });
+
+        const allUnremarkableCheckbox = $("allUnremarkable");
+        function checkAllUnremarkableState() {
+          const allFilled = assessFieldIds.every((id) => {
+            const el = $(id);
+            return el && el.value.trim().toLowerCase() === "unremarkable";
+          });
+          if (allUnremarkableCheckbox) {
+            allUnremarkableCheckbox.checked = allFilled;
+          }
+        }
+
+        if (allUnremarkableCheckbox) {
+          allUnremarkableCheckbox.addEventListener("change", (e) => {
+            const val = e.target.checked ? "unremarkable" : "";
+            assessFieldIds.forEach((id) => {
+              const el = $(id);
+              if (el) el.value = val;
+            });
+            document.querySelectorAll(".u-btn").forEach((btn) => {
+              btn.classList.toggle("active", e.target.checked);
+            });
+            markAll();
+            generate();
+          });
+        }
 
         function field(label, id, placeholder = "", type = "text") {
           return `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" placeholder="${placeholder}"></div>`;
@@ -1826,31 +2000,81 @@
             })
             .filter(Boolean);
         }
+
+        // ==========================================
+        // GENERATED NARRATIVE LOGIC & VERBIAGE TEMPLATES
+        // ==========================================
         function generate() {
-          const out = [];
-          const dispatchParts = [];
-          if (value("unit")) dispatchParts.push(`${value("unit")} dispatched`);
-          else if (value("sceneLocation") || value("sceneType"))
-            dispatchParts.push("Dispatched");
-          if (value("sceneLocation"))
-            dispatchParts.push(`to ${value("sceneLocation")}`);
-          if (value("sceneType"))
-            dispatchParts.push(`for a ${value("sceneType")} incident`);
-          if (dispatchParts.length)
-            out.push(dispatchParts.join(" ").replace(/\s+/g, " ") + ".");
-          const g =
+          // 1. Gather all form values
+          const unit = value("unit");
+          const sceneLoc = value("sceneLocation");
+          const sceneType = value("sceneType");
+          const gender =
             value("gender") === "M"
               ? "male"
               : value("gender") === "F"
                 ? "female"
                 : "";
-          const dob = value("dob"),
-            age = dobAge();
+          const dob = value("dob");
+          const age = dobAge();
           $("age").textContent = age
             ? `Calculated age: ${age}`
             : "Age calculated from DOB";
-          const patient = [
-            g,
+
+          const complain = value("complain");
+          const complaintDesc = value("complaintDesc");
+          const pain = value("pain");
+          const setValue = value("onsetValue");
+          const setUnit = value("onsetUnit") || "time unit";
+          const provocations = value("provocations");
+          const painQuality = value("painQuality");
+          const painRegion = value("painRegion");
+          const painSeverity = value("painSeverity");
+          const palliations = value("palliations");
+
+          const history = value("history");
+          const historyAdd = value("historyAdditional");
+          const medications = value("medications");
+          const allergies = value("allergies");
+          const oralVal = value("oralValue");
+          const oralUnit = value("oralUnit") || "hours";
+          const events = value("events");
+
+          const appearance = value("appearance");
+          const diagnostics = value("diagnostics");
+          const physicalDone = value("physicalDone");
+          const lungAssessed = value("lungAssessed");
+          const lungs = value("lungs");
+
+          const treatments = value("treatments");
+          const medsGiven = value("medsGiven");
+
+          const destination = value("destination");
+          const urgency = value("urgency");
+          const transportPosition = value("transportPosition");
+          const reassessed = value("reassessed");
+          const careTransferred = value("careTransferred");
+          const transferLoc = value("transferLocation");
+          const bedNumber = value("bedNumber");
+
+          // 2. Build D-CHART narrative sentences (Edit verbiage here safely)
+
+          // --- D · Dispatch Section ---
+          let dispatchText = "";
+          const dispatchSub = [];
+          if (unit) dispatchSub.push(`${unit} dispatched`);
+          else if (sceneLoc || sceneType) dispatchSub.push("Dispatched");
+          if (sceneLoc) dispatchSub.push(`to ${sceneLoc}`);
+          if (sceneType) dispatchSub.push(`for a ${sceneType} incident`);
+          if (dispatchSub.length) {
+            dispatchText = dispatchSub.join(" ").replace(/\s+/g, " ") + ".";
+          }
+
+          // --- C · Complaint Section ---
+          let complaintText = "";
+          const complaintSub = [];
+          const patientBio = [
+            gender,
             dob
               ? `DOB ${dob.slice(0, 2)}/${dob.slice(2, 4)}/${dob.slice(4)}`
               : "",
@@ -1858,54 +2082,71 @@
           ]
             .filter(Boolean)
             .join(", ");
-          const c = [];
-          if (patient) c.push(`Patient identified as ${patient}.`);
-          if (value("complain"))
-            c.push(`Chief complaint: ${value("complain")}.`);
-          if (value("complaintDesc"))
-            c.push(value("complaintDesc").replace(/[.!?]?$/, "."));
-          if (value("pain") === "Yes") {
-            const p = [];
-            if (value("onsetValue"))
-              p.push(
-                `onset ${value("onsetValue")} ${value("onsetUnit") || "time unit"}`,
-              );
-            if (value("provocations"))
-              p.push(`provoked by ${value("provocations")}`);
-            if (value("painQuality"))
-              p.push(`described as ${value("painQuality")}`);
-            if (value("painRegion")) p.push(`affecting ${value("painRegion")}`);
-            if (value("painSeverity"))
-              p.push(`severity ${value("painSeverity")}/10`);
-            if (value("palliations"))
-              p.push(`relieved by ${value("palliations")}`);
-            if (p.length) c.push(`Patient reports pain, ${p.join("; ")}.`);
-          } else if (value("pain") === "No") c.push("Patient denies pain.");
-          if (c.length) out.push(c.join(" "));
-          const h = [];
-          if (value("history"))
-            h.push(`Past medical history includes ${value("history")}.`);
-          if (value("historyAdditional"))
-            h.push(`Additional history: ${value("historyAdditional")}.`);
-          if (value("medications"))
-            h.push(`Current medications: ${value("medications")}.`);
-          if (value("allergies")) h.push(`Allergies: ${value("allergies")}.`);
-          if (value("oralValue"))
-            h.push(
-              `Last oral intake was ${value("oralValue")} ${value("oralUnit") || "hours"} prior.`,
+          if (patientBio)
+            complaintSub.push(`Patient identified as ${patientBio}.`);
+          if (complain) complaintSub.push(`Chief complaint: ${complain}.`);
+          if (complaintDesc)
+            complaintSub.push(complaintDesc.replace(/[.!?]?$/, "."));
+
+          if (pain === "Yes") {
+            const painSub = [];
+            if (setValue) painSub.push(`onset ${setValue} ${setUnit}`);
+            if (provocations) painSub.push(`provoked by ${provocations}`);
+            if (painQuality) painSub.push(`described as ${painQuality}`);
+            if (painRegion) painSub.push(`affecting ${painRegion}`);
+            if (painSeverity) painSub.push(`severity ${painSeverity}/10`);
+            if (palliations) painSub.push(`relieved by ${palliations}`);
+            if (painSub.length)
+              complaintSub.push(`Patient reports pain, ${painSub.join("; ")}.`);
+          } else if (pain === "No") {
+            complaintSub.push("Patient denies pain.");
+          } else {
+            const pStandalone = [];
+            if (setValue) pStandalone.push(`onset ${setValue} ${setUnit}`);
+            if (provocations) pStandalone.push(`provoked by ${provocations}`);
+            if (painQuality) pStandalone.push(`described as ${painQuality}`);
+            if (painRegion) pStandalone.push(`affecting ${painRegion}`);
+            if (painSeverity) pStandalone.push(`severity ${painSeverity}/10`);
+            if (palliations) pStandalone.push(`relieved by ${palliations}`);
+            if (pStandalone.length) {
+              complaintSub.push(`Patient reports ${pStandalone.join("; ")}.`);
+            }
+          }
+          if (complaintSub.length) complaintText = complaintSub.join(" ");
+
+          // --- H · History Section ---
+          let historyText = "";
+          const historySub = [];
+          if (history)
+            historySub.push(`Past medical history includes ${history}.`);
+          if (historyAdd) historySub.push(`Additional history: ${historyAdd}.`);
+          if (medications)
+            historySub.push(`Current medications: ${medications}.`);
+          if (allergies) historySub.push(`Allergies: ${allergies}.`);
+          if (oralVal)
+            historySub.push(
+              `Last oral intake was ${oralVal} ${oralUnit} prior.`,
             );
-          if (value("events"))
-            h.push(`Events leading to complaint: ${value("events")}.`);
-          if (h.length) out.push(h.join(" "));
-          const a = [];
-          if (value("appearance"))
-            a.push(`Patient observed with ${value("appearance")}.`);
-          a.push(...vitalsSentence(initial.read(), "Initial vital signs"));
-          if (value("diagnostics"))
-            a.push(`Diagnostics: ${value("diagnostics")}.`);
-          if (value("physicalDone") === "Yes") {
+          if (events)
+            historySub.push(`Events leading to complaint: ${events}.`);
+          if (historySub.length) historyText = historySub.join(" ");
+
+          // --- A · Assessment Section ---
+          let assessmentText = "";
+          const assessmentSub = [];
+          if (appearance)
+            assessmentSub.push(`Patient observed with ${appearance}.`);
+
+          const initVitalsArr = vitalsSentence(
+            initial.read(),
+            "Initial vital signs",
+          );
+          if (initVitalsArr.length) assessmentSub.push(...initVitalsArr);
+
+          if (diagnostics) assessmentSub.push(diagnostics);
+
+          if (physicalDone === "Yes") {
             const exam = [];
-            a.push("Physical assessment completed.");
             const fields = [
               ["airway", "Airway"],
               ["skin", "Skin"],
@@ -1921,8 +2162,9 @@
             fields.forEach(([id, label]) => {
               if (value(id)) exam.push(`${label}: ${value(id)}`);
             });
-            if (value("lungAssessed") === "Yes" && value("lungs"))
-              exam.push(`Lung sounds: ${value("lungs")}`);
+            if (lungAssessed === "Yes" && lungs)
+              exam.push(`Lung sounds: ${lungs}`);
+
             [...$("limbChoices").querySelectorAll("input:checked")].forEach(
               (cb) => {
                 const k = cb.value,
@@ -1940,13 +2182,32 @@
                   );
               },
             );
-            if (exam.length) a.push(`Physical assessment: ${exam.join(". ")}.`);
+
+            const allUnrem =
+              assessFieldIds.every((id) => {
+                const el = $(id);
+                return el && el.value.trim().toLowerCase() === "unremarkable";
+              }) && exam.length > 0;
+
+            if (allUnrem) {
+              assessmentSub.push(
+                "Physical assessment showed no remarkable findings.",
+              );
+            } else if (exam.length) {
+              assessmentSub.push("Physical assessment completed.");
+              assessmentSub.push(`Physical assessment: ${exam.join(". ")}.`);
+            } else {
+              assessmentSub.push("Physical assessment completed.");
+            }
           }
-          if (a.length) out.push(a.join(" "));
-          const r = [];
-          if (value("treatments"))
-            r.push(`Treatments provided: ${value("treatments")}.`);
-          if (value("medsGiven") === "Yes") {
+          if (assessmentSub.length) assessmentText = assessmentSub.join(" ");
+
+          // --- R · Treatment Section ---
+          let treatmentText = "";
+          const treatmentSub = [];
+          if (treatments)
+            treatmentSub.push(`Treatments provided: ${treatments}.`);
+          if (medsGiven === "Yes") {
             const meds = [
               ...$("medicationEntries").querySelectorAll(".repeat-card"),
             ]
@@ -1965,38 +2226,64 @@
               })
               .filter(Boolean);
             if (meds.length)
-              r.push(`Medications administered: ${meds.join("; ")}.`);
+              treatmentSub.push(
+                `Medications administered: ${meds.join("; ")}.`,
+              );
           }
-          if (r.length) out.push(r.join(" "));
-          const t = [];
-          if (value("destination"))
-            t.push(
-              `Patient transported to ${value("destination")}${value("urgency") ? ` (${value("urgency")})` : ""}.`,
+          if (treatmentSub.length) treatmentText = treatmentSub.join(" ");
+
+          // --- T · Transport Section ---
+          let transportText = "";
+          const transportSub = [];
+          if (destination)
+            transportSub.push(
+              `Patient transported to ${destination}${urgency ? ` (${urgency})` : ""}.`,
             );
-          else if (value("urgency"))
-            t.push(`Transport urgency: ${value("urgency")}.`);
-          if (value("reassessed") === "Yes") {
+          else if (urgency) transportSub.push(`Transport urgency: ${urgency}.`);
+
+          if (transportPosition) {
+            transportSub.push(
+              `Position during transport: ${transportPosition}.`,
+            );
+          }
+
+          if (reassessed === "Yes") {
             const rs = vitalsSentence(
               reassess.read(),
               "Transport reassessment",
             );
-            if (rs.length) t.push(...rs);
-            else t.push("Patient reassessed during transport.");
-          } else if (value("reassessed") === "No")
-            t.push("Patient not reassessed during transport.");
-          if (value("careTransferred") === "Yes") {
-            const loc = value("transferLocation"),
-              bed = value("bedNumber");
-            t.push(
-              `Patient care transferred${loc ? ` at ${loc}` : ""}${bed ? `, bed ${bed}` : ""}.`,
+            if (rs.length) transportSub.push(...rs);
+            else transportSub.push("Patient reassessed during transport.");
+          } else if (reassessed === "No") {
+            transportSub.push("Patient not reassessed during transport.");
+          }
+
+          if (careTransferred === "Yes") {
+            const omitLoc =
+              transferLoc &&
+              destination &&
+              transferLoc.toLowerCase() === destination.toLowerCase();
+            transportSub.push(
+              `Patient care transferred${!omitLoc && transferLoc ? ` at ${transferLoc}` : ""}${bedNumber ? `, bed ${bedNumber}` : ""}.`,
             );
-          } else if (value("careTransferred") === "No")
-            t.push("Patient care not transferred.");
-          if (t.length) out.push(t.join(" "));
-          const text = out.join("\n\n");
-          $("report").value = text;
+          } else if (careTransferred === "No") {
+            transportSub.push("Patient care not transferred.");
+          }
+          if (transportSub.length) transportText = transportSub.join(" ");
+
+          // 3. Output Final Consolidated Narrative
+          const finalSections = [
+            dispatchText,
+            complaintText,
+            historyText,
+            assessmentText,
+            treatmentText,
+            transportText,
+          ].filter(Boolean);
+          $("report").value = finalSections.join("\n\n");
           markAll();
         }
+
         let lastGenerated = "";
         function formChanged() {
           generate();
@@ -2004,6 +2291,7 @@
         }
         $("form").addEventListener("input", (e) => {
           if (e.target.id === "unit") return;
+          checkAllUnremarkableState();
           formChanged();
         });
         $("form").addEventListener("change", (e) => {
@@ -2067,6 +2355,9 @@
             "transferLocationField",
             "bedField",
           ].forEach((id) => $(id).classList.add("hidden"));
+          document
+            .querySelectorAll(".u-btn")
+            .forEach((b) => b.classList.remove("active"));
           $("report").value = "";
           $("unit").value = keepUnit;
           markAll();
